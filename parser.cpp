@@ -14,6 +14,15 @@ void Parser::loadScript(const QString filename)
     script = readShiftJis(filename);
 }
 
+void Parser::loadScriptUTF8(const QString filename)
+{
+    if(script != NULL)
+        delete script;
+
+    // script = readShiftJis(filename);
+    script = readUTF8(filename);
+}
+
 void Parser::prepareScript()
 {
     int index;
@@ -84,6 +93,20 @@ QStringList *Parser::readShiftJis(const QString filename)
 
     file->append(tmp);
     return file;
+}
+
+QStringList *Parser::readUTF8(const QString filename)
+{
+    QStringList *file = new QStringList();
+
+    QFile f(filename);
+    f.open(QIODevice::ReadOnly | QIODevice::Text);
+    // QStringList tmp = QTextCodec::codecForName("Shift-JIS")->toUnicode(f.readAll().data()).split("\n");
+    QStringList tmp = QTextCodec::codecForName("UTF-8")->toUnicode(f.readAll().data()).split("\n");
+    f.close();
+
+    file->append(tmp);
+    return file;
 
 }
 
@@ -137,10 +160,12 @@ int Parser::dumpStrings(const char *in)
 
 QByteArray Parser::insertStrings(const QString strings, const QString script, int char_limit)
 {
-    loadScript(strings);
+    // loadScript(strings);
+    loadScriptUTF8(strings);
     prepareScript();
     QStringList *tl_lines = getScript();
-    QStringList *script_lines = readShiftJis(script);
+    // QStringList *script_lines = readShiftJis(script);
+    QStringList *script_lines = readUTF8(script);
 
     QStringList output;
     QString line, tmp;
@@ -181,7 +206,33 @@ QByteArray Parser::insertStrings(const QString strings, const QString script, in
     }
 
     delete script_lines;
-    return QTextCodec::codecForName("Shift-JIS")->fromUnicode(output.join("\n"));
+    // return QTextCodec::codecForName("Shift-JIS")->fromUnicode(output.join("\n"));
+    QTextCodec *sjis = QTextCodec::codecForName("Shift-JIS");
+    QTextCodec *gbk = QTextCodec::codecForName("GBK");
+
+    QByteArray result;
+
+    QList<QString>::Iterator it = output.begin(), itend = output.end();
+    int cnt = 0;
+    for (; it != itend; it++, cnt++) {
+        // line = output.at(cnt);
+        // if (line)
+        // printf("output insert %s\n", line.toStdString().c_str());
+        if (it->contains("@")) {
+            QString tmp = *it;
+            tmp = tmp.replace("@", "");
+            result.append(gbk->fromUnicode(tmp));
+            // printf("out ori %s\n", it->toStdString().c_str());
+            // printf("out next %s\n", tmp.toStdString().c_str());
+            // printf("out gbk %s\n", gbk->fromUnicode(tmp).toStdString().c_str());
+        } else {
+            result.append(sjis->fromUnicode(*it));
+            // printf("out shift-jis %s\n", it->toStdString().c_str());
+            // result.append(gbk->fromUnicode(*it));
+        }
+        result.append("\n");
+    }
+    return result;
 }
 
 const QString Parser::wordWrap(const QString str, int line_limit, int char_limit)

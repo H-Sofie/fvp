@@ -89,6 +89,7 @@ int HcbDecoder::decode_op(const unsigned char *p)
 
     //decode
     fprintf(outfile, "%s", opdef[opcode].name);
+    // fprintf(outfile, "opc_%02x", opcode);
     p++; //move past opcode
 
     switch (opdef[opcode].params)

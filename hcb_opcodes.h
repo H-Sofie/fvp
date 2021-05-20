@@ -2,6 +2,7 @@
 #define HCB_OPCODES_H
 
 _OP_DEF opdef[] = {
+    // { 0x6a, "opc_6a", OPARG_NULL },
     { 0x00, "nop", OPARG_NULL },
     { 0x01, "initstack", OPARG_I8I8 },
     { 0x02, "call", OPARG_X32 },
