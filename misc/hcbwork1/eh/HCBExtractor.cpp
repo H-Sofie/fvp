@@ -126,7 +126,9 @@ int main(int argc, char *argv[]) {
 				int len2 = binCN[pos2 + 1];
 				int cntpos = pos2 + 2;
 				fprintf(fp2, "{0x%08X}\n", pos);
-				for (int i = 0; i < len2-1; i++) fputc(binCN[cntpos+i], fp2);
+				// for (int i = 0; i < len2-1; i++)
+				for (int i = 0; i < len2; i++) // not contain 0x00
+					fputc(binCN[cntpos+i], fp2);
 				fputc('\n', fp2);
 			} else {
 				fprintf(lout, "W: 0x%08X does not contain 0x06(jmp) or 0x0E(pushstring) opcode\n", pos);
