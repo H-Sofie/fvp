@@ -1,4 +1,9 @@
 # fvp
+The modified version reads UTF-8 encoded script file.  
+When rebuilding hcb file from script file, the program rebuilds with GBK codec if corresponding line of the script file contains '@' symbol, otherwise rebuilds with Shift-JIS codec.   
+
+# Original README
+# fvp
 fvp - All in one tool for favorite games
 
 TODO:
