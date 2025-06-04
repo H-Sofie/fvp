@@ -1,4 +1,5 @@
 #include "parser.h"
+#include <string.h>
 
 
 QStringList *Parser::getScript()
@@ -131,7 +132,7 @@ int Parser::exportParts(const QString filename)
     return 0;
 }
 
-int Parser::dumpStrings(const char *in)
+int Parser::dumpStrings(const char *in, const char *codec)
 {
     QString in_file = in;
     QStringList *script_lines = readShiftJis(in_file);
@@ -153,8 +154,30 @@ int Parser::dumpStrings(const char *in)
             output.append(line.section(str_token, 1) + "\n");
     }
 
-    writeShiftJis(in_file.section(".", 0, 0) + "_strings.txt", output);
+    QTextCodec *cd = QTextCodec::codecForName(codec ? codec : "Shift-JIS");
+    if (!cd) cd = QTextCodec::codecForName("Shift-JIS");
+    QFile f(in_file.section(".", 0, 0) + "_strings.txt");
+    f.open(QIODevice::WriteOnly | QIODevice::Text);
+    f.write(cd->fromUnicode(output.join("\n")));
+    f.close();
     delete script_lines;
+    return 0;
+}
+
+int Parser::convertFileEncoding(const QString &filename, const char *codec)
+{
+    if (!codec || strcmp(codec, "Shift-JIS") == 0)
+        return 0;
+
+    QStringList *lines = readShiftJis(filename);
+    QTextCodec *cd = QTextCodec::codecForName(codec);
+    if (!cd) cd = QTextCodec::codecForName("Shift-JIS");
+
+    QFile f(filename);
+    f.open(QIODevice::WriteOnly | QIODevice::Text);
+    f.write(cd->fromUnicode(lines->join("\n")));
+    f.close();
+    delete lines;
     return 0;
 }
 

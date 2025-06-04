@@ -1,4 +1,5 @@
 #include "hcbrebuilder.h"
+#include <stdint.h>
 
 int HcbRebuilder::bytesWhitespace(const char *p, const char *endp)
 {
@@ -62,7 +63,7 @@ int HcbRebuilder::manageLabel(BUILD *b, char *val, int mode, IDX_TYPE type)
     }
     else if (mode == 1)
     {
-        for (i = 0; i < b->numlabels[type]; i++) { if (idx[i].offset == (int)val) { return i; } }
+        for (i = 0; i < b->numlabels[type]; i++) { if (idx[i].offset == (int)(intptr_t)val) { return i; } }
     }
     else if (mode == 2 || mode == 3)
     {

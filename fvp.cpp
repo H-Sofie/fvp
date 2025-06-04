@@ -2,6 +2,17 @@
 
 int main(int argc, char *argv[])
 {
+    const char *enc = "Shift-JIS";
+    for(int i = 1; i < argc; ++i) {
+        if(strcmp(argv[i], "-enc") == 0 && i + 1 < argc) {
+            enc = argv[i + 1];
+            for(int j = i; j + 2 < argc; ++j) {
+                argv[j] = argv[j + 2];
+            }
+            argc -= 2;
+            break;
+        }
+    }
     if (argc == 3 && strcmp(argv[1], "-split") == 0)
     {
         Parser::getInstance().exportParts(argv[2]);
@@ -10,7 +21,8 @@ int main(int argc, char *argv[])
     {
         HcbDecoder decoder;
         decoder.decode(argv[2], argv[3]);
-        Parser::getInstance().dumpStrings(argv[3]);
+        Parser::getInstance().convertFileEncoding(argv[3], enc);
+        Parser::getInstance().dumpStrings(argv[3], enc);
     }
     else if ((argc == 5 || argc == 7) && strcmp(argv[1], "-c") == 0)
     {
@@ -51,7 +63,7 @@ END:    usage();
 void usage()
 {
     printf("\nusage:\n"
-           "   tool -d <input.hcb> <output.txt>\n"
+           "   tool -d <input.hcb> <output.txt> [-enc codec]\n"
            "   tool -split <input_strings.txt>\n"
            "   tool -c [-ww limit] <input_strings.txt> <input_script.txt> <output.hcb>\n"
            "   tool -decode <input (NVSG File or Folder)> [output]\n"

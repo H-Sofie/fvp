@@ -25,7 +25,8 @@ public:
 
     QStringList *getScript();
 
-    int dumpStrings(const char *in);
+    int dumpStrings(const char *in, const char *codec = "Shift-JIS");
+    int convertFileEncoding(const QString &filename, const char *codec);
     QByteArray insertStrings(const QString strings, const QString script, int char_limit = default_charlimit);
     int exportParts(const QString filename);
 

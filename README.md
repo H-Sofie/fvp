@@ -1,6 +1,7 @@
 # fvp
 The modified version reads UTF-8 encoded script file.  
-When rebuilding hcb file from script file, the program rebuilds with GBK codec if corresponding line of the script file contains '@' symbol, otherwise rebuilds with Shift-JIS codec.   
+When rebuilding hcb file from script file, the program rebuilds with GBK codec if corresponding line of the script file contains '@' symbol, otherwise rebuilds with Shift-JIS codec.
+When decoding hcb files or dumping strings you can specify the output encoding with `-enc`, defaulting to Shift-JIS.
 
 # Original README
 # fvp
@@ -10,14 +11,15 @@ TODO:
 Add bin archive support
 
 usage:
+```
+fvp -d input.hcb output.txt [-enc codec]
+fvp -split strings.txt
+fvp -c [-ww charlimit] strings.txt script.txt output.hcb
+fvp -decode input [output]
+fvp -encode input [output]
+```
 
-	fvp -d input.hcb output.txt
-	fvp -split strings.txt
-	fvp -c [-ww charlimit] strings.txt script.txt output.hcb
-	fvp -decode input [output]
-	fvp -encode input [output]
-
--------------
+---
 
 Use mode "-d" to dump the opcodes for the given hcb file and dump strings to seperate file.
 
@@ -79,14 +81,13 @@ This is typically used for "syscall ThreadStart" commands.
 Near the end of the text dump, you can edit the "TITLE" line which contains
 the text for the game's titlebar.
 
------------
+---
 
 authors: <br>
 binaryfail - Most of the code related to dumping and rebuilding hcb files <br>
 akerou - Rest <br>
 
------------
+---
 
 version history:
 v1 / 2015june02 - first version
-
