@@ -19,15 +19,11 @@ jobs:
       - name: Install MXE cross toolchain
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y \
-            software-properties-common \
-            curl \
-            gnupg \
-            mxe-x86-64-w64-mingw32.static-gcc \
-            mxe-x86-64-w64-mingw32.static-qtbase \
-            mxe-x86-64-w64-mingw32.static-qttools
+          sudo apt-get install -y software-properties-common curl gnupg
           curl -fsSL https://pkg.mxe.cc/repos/apt/client-conf/mxeapt.gpg | sudo gpg --dearmor -o /usr/share/keyrings/mxe.gpg
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/mxe.gpg] http://pkg.mxe.cc/repos/apt focal main" | sudo tee /etc/apt/sources.list.d/mxe.list
+          sudo apt-get update -y
+          sudo apt-get install -y mxe-x86-64-w64-mingw32.static-gcc mxe-x86-64-w64-mingw32.static-qtbase mxe-x86-64-w64-mingw32.static-qttools
           echo "/usr/lib/mxe/usr/bin" >> $GITHUB_PATH
       - name: Configure
         run: |
