@@ -1,6 +1,6 @@
 # fvp
 The modified version reads UTF-8 encoded script file.  
-When rebuilding hcb file from script file, the program rebuilds with GBK codec if corresponding line of the script file contains '@' symbol, otherwise rebuilds with Shift-JIS codec.
+When rebuilding hcb file from script file, the program rebuilds with GBK codec if corresponding line of the script file contains '@' symbol, otherwise rebuilds with Shift-JIS codec.  
 When decoding hcb files or dumping strings you can specify the output encoding with `-enc`, defaulting to Shift-JIS.
 
 # Original README
